@@ -26,6 +26,19 @@ spring:
           additional-models:
             - deepseek-r1:7b
             - qwen2.5:3b
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      organization-id: ${OPENAI_ORG_ID}
+      project-id: ${OPENAI_PROJECT_ID}
+      chat:
+        options:
+          model:
+            - gpt-3.5-turbo
+            - gpt-4o
+
+
+
+
 
 
 

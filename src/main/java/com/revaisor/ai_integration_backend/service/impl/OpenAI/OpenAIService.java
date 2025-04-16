@@ -1,37 +1,32 @@
-package com.revaisor.ai_integration_backend.service.impl;
-
+package com.revaisor.ai_integration_backend.service.impl.OpenAI;
 
 import com.revaisor.ai_integration_backend.service.AiService;
 import org.springframework.ai.chat.prompt.Prompt;
-import org.springframework.ai.ollama.OllamaChatModel;
-import org.springframework.ai.ollama.api.OllamaOptions;
+import org.springframework.ai.model.openai.autoconfigure.OpenAiChatProperties;
+import org.springframework.ai.openai.OpenAiChatModel;
+import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.stereotype.Service;
 
-@Service("OllamaAiService")
-public abstract class OllamaAiService implements AiService {
+@Service
+public abstract class OpenAIService implements AiService {
 
-    protected final OllamaChatModel chatModel;
+    protected final OpenAiChatModel chatModel;
+    protected final OpenAiChatProperties properties;
 
-    public OllamaAiService(OllamaChatModel chatModel) {
+    public OpenAIService(OpenAiChatModel chatModel, OpenAiChatProperties properties) {
         this.chatModel = chatModel;
+        this.properties = properties;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String generateResponse(String message) {
         return generateResponse(message, getModelName());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String generateResponse(String message, String modelName) {
-
         try {
-            OllamaOptions options = OllamaOptions.builder()
+            OpenAiChatOptions options = OpenAiChatOptions.builder()
                     .model(modelName)
                     .temperature(getTemperature())
                     .build();
@@ -40,13 +35,16 @@ public abstract class OllamaAiService implements AiService {
                     .getResult()
                     .getOutput()
                     .getText();
-        }catch (Exception e) {
+
+        } catch (Exception e) {
             throw new RuntimeException("Error generating response with " + getServiceName(), e);
         }
     }
 
     protected abstract String getModelName();
+
     protected abstract double getTemperature();
+
     protected abstract String getServiceName();
 
 }

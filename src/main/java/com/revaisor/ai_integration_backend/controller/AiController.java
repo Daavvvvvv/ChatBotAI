@@ -16,11 +16,15 @@ public class AiController {
 
     public AiController(
             @Qualifier("QwenAiService") AiService qwenAiService,
-            @Qualifier("DeepseekAiService") AiService deepseekAiService
+            @Qualifier("DeepseekAiService") AiService deepseekAiService,
+            @Qualifier("Gpt4oService") AiService gpt4oAiService,
+            @Qualifier("Gpt3Service") AiService gpt3AiService
     ){
         this.aiServices = Map.of(
                 "qwen", qwenAiService,
-                "deepseek", deepseekAiService
+                "deepseek", deepseekAiService,
+                "gpt4o", gpt4oAiService,
+                "gpt3.5", gpt3AiService
         );
     }
 
@@ -32,9 +36,9 @@ public class AiController {
 
     @PostMapping("/generate")
     public MessageResponse generateResponse(@RequestBody MessageRequest request){
-        String modelType = request.getModelType() != null ? request.getModelType() : "qwen";
+        String modelType = request.getModelType() != null ? request.getModelType() : "gpt4o";
 
-        AiService service = aiServices.getOrDefault(modelType, aiServices.get("qwen"));
+        AiService service = aiServices.getOrDefault(modelType, aiServices.get("gpt4o"));
 
         String response = service.generateResponse(request.getMessage());
 
@@ -45,7 +49,9 @@ public class AiController {
     public Map<String, String> getModels() {
         return Map.of(
                 "qwen", "Qwen2.5 model 3b",
-                "deepseek", "Deepseekr1-7b model"
+                "deepseek", "Deepseekr1-7b model",
+                "gpt4o", "Gpt-4o model",
+                "gpt3.5", "Gpt-3.5 model"
         );
     }
 
