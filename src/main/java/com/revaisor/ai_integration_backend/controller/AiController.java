@@ -4,6 +4,7 @@ import com.revaisor.ai_integration_backend.dto.MessageRequest;
 import com.revaisor.ai_integration_backend.dto.MessageResponse;
 import com.revaisor.ai_integration_backend.service.AiService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +15,7 @@ public class AiController {
     private final AiService aiService;
 
     @Autowired
-    public AiController(AiService aiService) {
+    public AiController(@Qualifier("QwenAiService") AiService aiService) {
         this.aiService = aiService;
     }
 

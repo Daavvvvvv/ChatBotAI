@@ -25,6 +25,7 @@ spring:
         chat:
           additional-models:
             - deepseek-r1:7b
+            - qwen2.5:3b
 
 
 
