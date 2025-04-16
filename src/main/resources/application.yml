@@ -1,0 +1,48 @@
+# Server Configuration
+server:
+  port: 8080
+  servlet:
+    context-path: /
+  compression:
+    enabled: true
+    min-response-size: 1024
+    mime-types: application/json,application/xml
+
+
+# Spring Configuration
+spring:
+
+
+  application:
+    name: revaisor-ai-backend
+
+
+  # Deepseek Configuration
+  ai:
+    ollama:
+      init:
+        pull-model-strategy: always
+        chat:
+          additional-models:
+            - deepseek-r1:7b
+
+
+
+
+
+  # Json Configuration
+  jackson:
+    default-property-inclusion: non_null
+    deserialization:
+      fail-on-unknown-properties: false
+
+# Application Event Tracking and Monitoring : Logging Configuration
+logging:
+  level:
+    root: INFO
+    com.revaisor: DEBUG
+    org.springframework.ai: INFO
+    org.springframework.web: INFO
+
+
+
