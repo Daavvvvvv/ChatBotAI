@@ -11,8 +11,6 @@ server:
 
 # Spring Configuration
 spring:
-
-
   application:
     name: revaisor-ai-backend
 

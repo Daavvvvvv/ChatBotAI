@@ -1,6 +1,5 @@
 package com.revaisor.ai_integration_backend.service;
 
-import org.springframework.ai.ollama.OllamaChatModel;
 
 /**
  * Interface for AI service operations
