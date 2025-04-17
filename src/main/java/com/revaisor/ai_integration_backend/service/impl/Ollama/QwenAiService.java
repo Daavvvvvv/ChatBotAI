@@ -17,7 +17,7 @@ public class QwenAiService extends OllamaAiService {
 
     @Override
     protected double getTemperature() {
-        return 0.8;
+        return 0.9;
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.revaisor.ai_integration_backend.controller;
 import com.revaisor.ai_integration_backend.dto.MessageRequest;
 import com.revaisor.ai_integration_backend.dto.MessageResponse;
 import com.revaisor.ai_integration_backend.service.AiService;
+import com.revaisor.ai_integration_backend.service.impl.OpenAI.OpenAIService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +14,7 @@ import java.util.Map;
 public class AiController {
 
     private final Map<String, AiService> aiServices;
+
 
     public AiController(
             @Qualifier("QwenAiService") AiService qwenAiService,
@@ -36,11 +38,14 @@ public class AiController {
 
     @PostMapping("/generate")
     public MessageResponse generateResponse(@RequestBody MessageRequest request){
-        String modelType = request.getModelType() != null ? request.getModelType() : "gpt4o";
+        String modelType = request.getModelType() != null ? request.getModelType().toLowerCase() : "gpt4o";
+
+        String assistantType = request.getAssistantType() != null ? request.getAssistantType().toLowerCase() : "math";
 
         AiService service = aiServices.getOrDefault(modelType, aiServices.get("gpt4o"));
 
-        String response = service.generateResponse(request.getMessage());
+
+        String response = service.generateResponse(request.getMessage(), assistantType);
 
         return new MessageResponse(response);
     }

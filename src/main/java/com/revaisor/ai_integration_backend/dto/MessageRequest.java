@@ -6,5 +6,6 @@ import lombok.Getter;
 public class MessageRequest {
     private String message;
     private String modelType;
+    private String assistantType;
 
 }
