@@ -3,7 +3,6 @@ package com.revaisor.ai_integration_backend.controller;
 import com.revaisor.ai_integration_backend.dto.MessageRequest;
 import com.revaisor.ai_integration_backend.dto.MessageResponse;
 import com.revaisor.ai_integration_backend.service.AiService;
-import com.revaisor.ai_integration_backend.service.impl.OpenAI.OpenAIService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 

@@ -35,13 +35,6 @@ spring:
             - gpt-4o
 
 
-
-
-
-
-
-
-
   # Json Configuration
   jackson:
     default-property-inclusion: non_null
