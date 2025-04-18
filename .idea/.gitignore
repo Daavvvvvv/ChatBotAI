@@ -7,6 +7,8 @@
 /dataSources/
 /dataSources.local.xml
 
+
+.idea/
 # Maven
 target/
 !.mvn/wrapper/maven-wrapper.jar
