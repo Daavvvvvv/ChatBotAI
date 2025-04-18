@@ -20,7 +20,7 @@ public class AiController {
             @Qualifier("DeepseekAiService") AiService deepseekAiService,
             @Qualifier("Gpt4oService") AiService gpt4oAiService,
             @Qualifier("Gpt3Service") AiService gpt3AiService
-    ){
+    ) {
         this.aiServices = Map.of(
                 "qwen", qwenAiService,
                 "deepseek", deepseekAiService,
@@ -31,18 +31,16 @@ public class AiController {
 
     /**
      * Endpoint for generate response from AI model
+     *
      * @param request MessageRequest object containing the message
      * @return ResponseEntity containing the generated response
      */
 
     @PostMapping("/generate")
-    public MessageResponse generateResponse(@RequestBody MessageRequest request){
-        String modelType = request.getModelType() != null ? request.getModelType().toLowerCase() : "gpt4o";
-
+    public MessageResponse generateResponse(@RequestBody MessageRequest request) {
+        String modelType = request.getModelType() != null ? request.getModelType().toLowerCase() : "qwen";
         String assistantType = request.getAssistantType() != null ? request.getAssistantType().toLowerCase() : "math";
-
-        AiService service = aiServices.getOrDefault(modelType, aiServices.get("gpt4o"));
-
+        AiService service = aiServices.get(modelType);
 
         String response = service.generateResponse(request.getMessage(), assistantType);
 
