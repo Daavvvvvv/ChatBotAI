@@ -22,16 +22,28 @@ import {
   ChatBubble,
   ChatBubbleMessage,
   ChatBubbleAvatar,
+  ChatBubbleAction,
+  ChatBubbleActionWrapper,
 } from "./ui/chat/chat-bubble";
-import { Loader2, AlertTriangle } from "lucide-react";
+import { Loader2, AlertTriangle, Star } from "lucide-react";
 import { ThemeToggle } from "./themes/theme-toggle";
 import { aiApi, type MessageRequest } from "@/lib/api";
+import { FeedbackComponent } from "./FeedbackComponent";
+import { feedbackApi, type FeedbackRequest } from "@/lib/feedbackApi";
+
 
 // Message type definition for the chat
 interface Message {
   role: "user" | "assistant" | "error";
   content: string;
+  id?: number;
 }
+
+/**
+ * 
+ * @returns ChatComponent - A chat component that allows users to interact with an AI assistant.
+ * It includes a message input area, a model selection dropdown, and a feedback system for AI responses. 
+ */
 
 export default function ChatComponent() {
   const [input, setInput] = useState<string>("");
@@ -41,6 +53,12 @@ export default function ChatComponent() {
   const [selectedModel, setSelectedModel] = useState<string>("deepseek");
   const [assistantType, setAssistantType] = useState<string>("software");
   const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
+
+  // Feedback state
+  const [showFeedback, setShowFeedback] = useState<boolean>(false);
+  const [feedbackMessageIndex, setFeedbackMessageIndex] = useState<
+    number | null
+  >(null);
 
   // Fetch available models when component mounts
   useEffect(() => {
@@ -94,6 +112,7 @@ export default function ChatComponent() {
       const aiMessage: Message = {
         role: "assistant",
         content: response.response,
+        id: Date.now(), // Add a unique ID for the message
       };
       setMessages((prev) => [...prev, aiMessage]);
     } catch (error) {
@@ -112,6 +131,53 @@ export default function ChatComponent() {
       setLoading(false);
       setRequestInProgress(false);
     }
+  };
+
+
+  /**
+   * 
+   * @param index - The index of the assistant message to rate.
+   * Sets the feedback message index and shows the feedback dialog.
+   */
+  const handleFeedbackClick = (index: number) => {
+    setFeedbackMessageIndex(index);
+    setShowFeedback(true);
+  };
+
+
+  /**
+   * 
+   * @param rating - The rating given by the user.
+   * @param comments - Additional comments provided by the user.
+   * Submits the feedback for the selected assistant message.
+   */
+  const handleFeedbackSubmit = async (rating: number, comments: string) => {
+    if (feedbackMessageIndex === null) return;
+
+    // Get the assistant message to rate
+    const assistantMessage = messages[feedbackMessageIndex];
+
+    // Get the user message that prompted this response (should be right before the assistant response)
+    const userMessageIndex = feedbackMessageIndex - 1;
+    const userMessage =
+      userMessageIndex >= 0 ? messages[userMessageIndex] : { content: "" };
+
+    // Prepare the feedback request
+    const feedbackRequest: FeedbackRequest = {
+      userMessage: userMessage.content,
+      aiResponse: assistantMessage.content,
+      modelType: selectedModel,
+      assistantType: assistantType,
+      rating: rating,
+      comments: comments || undefined,
+    };
+
+    // Submit the feedback
+    await feedbackApi.submitFeedback(feedbackRequest);
+
+    // Reset feedback state
+    setShowFeedback(false);
+    setFeedbackMessageIndex(null);
   };
 
   const assistantTypes = [
@@ -184,7 +250,7 @@ export default function ChatComponent() {
               ) : (
                 messages.map((message, index) => (
                   <ChatBubble
-                    key={index}
+                    key={message.id || index}
                     variant={message.role === "user" ? "sent" : "received"}>
                     <ChatBubbleAvatar
                       fallback={
@@ -206,6 +272,16 @@ export default function ChatComponent() {
                         message.content
                       )}
                     </ChatBubbleMessage>
+                    {message.role === "assistant" && (
+                      <ChatBubbleActionWrapper variant="received">
+                        <ChatBubbleAction
+                          icon={<Star className="h-4 w-4" />}
+                          onClick={() => handleFeedbackClick(index)}
+                          aria-label="Rate this response"
+                          title="Rate this response"
+                        />
+                      </ChatBubbleActionWrapper>
+                    )}
                   </ChatBubble>
                 ))
               )}
@@ -253,6 +329,22 @@ export default function ChatComponent() {
           </form>
         </CardFooter>
       </Card>
+
+      {feedbackMessageIndex !== null && (
+        <FeedbackComponent
+          isOpen={showFeedback}
+          onClose={() => setShowFeedback(false)}
+          userMessage={
+            feedbackMessageIndex > 0
+              ? messages[feedbackMessageIndex - 1].content
+              : ""
+          }
+          aiResponse={messages[feedbackMessageIndex]?.content || ""}
+          modelType={selectedModel}
+          assistantType={assistantType}
+          onFeedbackSubmit={handleFeedbackSubmit}
+        />
+      )}
     </div>
   );
 }
