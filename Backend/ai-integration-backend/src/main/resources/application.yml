@@ -14,11 +14,12 @@ spring:
   application:
     name: revaisor-ai-backend
 
+
   datasource:
     url: jdbc:h2:file:./data/feedback-db
     driver-class-name: org.h2.Driver
-    username: sa
-    password: password
+    username: ${DATABASE_USER}
+    password: ${DATABASE_PASSWORD}
 
   jpa:
     hibernate:
@@ -63,14 +64,6 @@ spring:
     default-property-inclusion: non_null
     deserialization:
       fail-on-unknown-properties: false
-
-# Application Event Tracking and Monitoring : Logging Configuration
-logging:
-  level:
-    root: INFO
-    com.revaisor: DEBUG
-    org.springframework.ai: INFO
-    org.springframework.web: INFO
 
 
 

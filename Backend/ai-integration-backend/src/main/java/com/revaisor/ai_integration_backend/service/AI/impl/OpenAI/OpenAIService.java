@@ -24,6 +24,7 @@ public abstract class OpenAIService extends AbstractAiService {
         this.properties = properties;
     }
 
+
     @Override
     protected String callModelWithPrompt(List<Message> messages) {
 

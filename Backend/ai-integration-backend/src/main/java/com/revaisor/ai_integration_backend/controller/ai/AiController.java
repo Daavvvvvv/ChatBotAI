@@ -15,6 +15,14 @@ public class AiController {
     private final Map<String, AiService> aiServices;
 
 
+    /**
+     * Constructor for AiController
+     *
+     * @param qwenAiService    Qwen AI service
+     * @param deepseekAiService Deepseek AI service
+     * @param gpt4oAiService   Gpt-4o AI service
+     * @param gpt3AiService    Gpt-3.5 AI service
+     */
     public AiController(
             @Qualifier("QwenAiService") AiService qwenAiService,
             @Qualifier("DeepseekAiService") AiService deepseekAiService,
@@ -32,8 +40,8 @@ public class AiController {
     /**
      * Endpoint for generate response from AI model
      *
-     * @param request MessageRequest object containing the message
-     * @return ResponseEntity containing the generated response
+     * @param request MessageRequest containing the message and model type
+     * @return MessageResponse containing the generated response
      */
 
     @PostMapping("/generate")
@@ -47,6 +55,11 @@ public class AiController {
         return new MessageResponse(response);
     }
 
+    /**
+     * Endpoint to get available models
+     *
+     * @return Map of available models
+     */
     @GetMapping("/models")
     public Map<String, String> getModels() {
         return Map.of(
