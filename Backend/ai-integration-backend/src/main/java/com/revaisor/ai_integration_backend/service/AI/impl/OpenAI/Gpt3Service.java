@@ -1,4 +1,4 @@
-package com.revaisor.ai_integration_backend.service.impl.OpenAI;
+package com.revaisor.ai_integration_backend.service.AI.impl.OpenAI;
 
 import org.springframework.ai.model.openai.autoconfigure.OpenAiChatProperties;
 import org.springframework.ai.openai.OpenAiChatModel;

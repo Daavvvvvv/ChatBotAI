@@ -1,4 +1,4 @@
-package com.revaisor.ai_integration_backend.service;
+package com.revaisor.ai_integration_backend.service.AI.impl;
 
 
 import org.springframework.core.io.Resource;

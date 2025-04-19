@@ -1,4 +1,4 @@
-package com.revaisor.ai_integration_backend.service.impl.Ollama;
+package com.revaisor.ai_integration_backend.service.AI.impl.Ollama;
 
 import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.stereotype.Service;

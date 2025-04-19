@@ -1,4 +1,4 @@
-package com.revaisor.ai_integration_backend.service;
+package com.revaisor.ai_integration_backend.service.AI.impl;
 
 import com.revaisor.ai_integration_backend.exception.RequestValidator;
 import org.springframework.ai.chat.messages.Message;
