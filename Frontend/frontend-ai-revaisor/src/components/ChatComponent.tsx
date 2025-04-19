@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import {
@@ -25,109 +25,7 @@ import {
 } from "./ui/chat/chat-bubble";
 import { Loader2, AlertTriangle } from "lucide-react";
 import { ThemeToggle } from "./themes/theme-toggle";
-
-// Create API service type declarations
-export interface MessageRequest {
-  message: string;
-  modelType?: string;
-  assistantType?: string;
-}
-
-export interface MessageResponse {
-  response: string;
-}
-
-export interface ModelInfo {
-  [key: string]: string;
-}
-
-// API service implementation with timeout
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/ai";
-
-const TIMEOUT_DURATION = 60000; // 60 segundos (1 minuto)
-
-const aiApi = {
-  async generateResponse(request: MessageRequest): Promise<MessageResponse> {
-    try {
-      console.log("Sending request to:", `${API_BASE_URL}/generate`);
-      console.log("Request data:", request);
-
-      // Crear un controlador de aborto
-      const controller = new AbortController();
-      const signal = controller.signal;
-
-      // Configurar el timeout
-      const timeoutId = setTimeout(() => {
-        controller.abort();
-      }, TIMEOUT_DURATION);
-
-      try {
-        const response = await fetch(`${API_BASE_URL}/generate`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(request),
-          signal, // Usar la señal del controlador de aborto
-        });
-
-        // Limpiar el timeout ya que la solicitud se completó
-        clearTimeout(timeoutId);
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error("API error response:", errorText);
-          throw new Error(`API error: ${response.status} - ${errorText}`);
-        }
-
-        const data = await response.json();
-        console.log("Response data:", data);
-        return data;
-      } catch (error) {
-        // Limpiar el timeout en caso de error
-        clearTimeout(timeoutId);
-
-        // Verificar si el error es debido al timeout
-        if (error instanceof Error && error.name === "AbortError") {
-          throw new Error(
-            "La solicitud ha tardado demasiado tiempo. Por favor, inténtalo de nuevo."
-          );
-        }
-        throw error;
-      }
-    } catch (error) {
-      console.error("Error generating AI response:", error);
-      throw error;
-    }
-  },
-
-  async getModels(): Promise<ModelInfo> {
-    try {
-      console.log("Fetching models from:", `${API_BASE_URL}/models`);
-
-      const response = await fetch(`${API_BASE_URL}/models`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("API error response:", errorText);
-        throw new Error(`API error: ${response.status} - ${errorText}`);
-      }
-
-      const data = await response.json();
-      console.log("Models data:", data);
-      return data;
-    } catch (error) {
-      console.error("Error fetching models:", error);
-      throw error;
-    }
-  },
-};
+import { aiApi, type MessageRequest } from "@/lib/api";
 
 // Message type definition for the chat
 interface Message {
@@ -139,7 +37,7 @@ export default function ChatComponent() {
   const [input, setInput] = useState<string>("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [models, setModels] = useState<ModelInfo>({});
+  const [models, setModels] = useState<Record<string, string>>({});
   const [selectedModel, setSelectedModel] = useState<string>("deepseek");
   const [assistantType, setAssistantType] = useState<string>("software");
   const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
@@ -205,9 +103,9 @@ export default function ChatComponent() {
       const errorMessage: Message = {
         role: "error",
         content:
-          error instanceof Error && error.message.includes("tardado demasiado")
-            ? "La solicitud ha tardado demasiado tiempo. Por favor, inténtalo de nuevo con un mensaje más corto o prueba con otro modelo."
-            : "Lo siento, hubo un error al generar una respuesta. Por favor, intenta de nuevo.",
+          error instanceof Error && error.message.includes("took too long")
+            ? "The request took too long to complete. Please try again with a shorter message or try a different model."
+            : "Sorry, there was an error generating a response. Please try again.",
       };
       setMessages((prev) => [...prev, errorMessage]);
     } finally {
@@ -217,7 +115,7 @@ export default function ChatComponent() {
   };
 
   const assistantTypes = [
-    { value: "software", label: "Software Engineering" },
+    { value: "software", label: "Software Engineer" },
     { value: "math", label: "Mathematics" },
     { value: "car", label: "Car Expert" },
     { value: "sports", label: "Sports" },
@@ -281,7 +179,7 @@ export default function ChatComponent() {
             <ChatMessageList>
               {messages.length === 0 ? (
                 <div className="text-center text-muted-foreground py-8">
-                  Envía un mensaje para iniciar la conversación
+                  Send a message to start the conversation
                 </div>
               ) : (
                 messages.map((message, index) => (
@@ -317,7 +215,7 @@ export default function ChatComponent() {
                   <ChatBubbleMessage variant="received">
                     <div className="flex items-center">
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Generando respuesta...
+                      Generating response...
                     </div>
                   </ChatBubbleMessage>
                 </ChatBubble>
@@ -333,8 +231,8 @@ export default function ChatComponent() {
               onChange={(e) => setInput(e.target.value)}
               placeholder={
                 loading
-                  ? "Espera a que termine la respuesta actual..."
-                  : "Escribe tu mensaje aquí..."
+                  ? "Wait for the current response to finish..."
+                  : "Type your message here..."
               }
               className="flex-1 resize-none"
               disabled={loading}
@@ -349,7 +247,7 @@ export default function ChatComponent() {
               {loading ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (
-                "Enviar"
+                "Send"
               )}
             </Button>
           </form>
