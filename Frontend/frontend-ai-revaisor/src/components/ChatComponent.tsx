@@ -118,7 +118,7 @@ export default function ChatComponent() {
     } catch (error) {
       console.error("Error generating response:", error);
 
-      // Add appropriate error message depending on the error type
+      // Handle error message
       const errorMessage: Message = {
         role: "error",
         content:
@@ -180,6 +180,8 @@ export default function ChatComponent() {
     setFeedbackMessageIndex(null);
   };
 
+
+  // Assistant types for the dropdown
   const assistantTypes = [
     { value: "software", label: "Software Engineer" },
     { value: "math", label: "Mathematics" },
@@ -188,6 +190,7 @@ export default function ChatComponent() {
     { value: "travel", label: "Travel" },
   ];
 
+  
   return (
     <div className="w-full max-w-4xl mx-auto p-4">
       <Card className="w-full">

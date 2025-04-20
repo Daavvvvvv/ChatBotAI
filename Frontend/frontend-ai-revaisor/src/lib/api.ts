@@ -17,7 +17,7 @@ export interface ModelInfo {
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/ai";
 
-const TIMEOUT_DURATION = 60000; // 60 segundos (1 minuto)
+const TIMEOUT_DURATION = 180000; // 180 seconds (3 minutes)
 
 const aiApi = {
   async generateResponse(request: MessageRequest): Promise<MessageResponse> {
@@ -102,4 +102,3 @@ const aiApi = {
 };
 
 export { aiApi, API_BASE_URL, TIMEOUT_DURATION };
-

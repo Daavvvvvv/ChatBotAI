@@ -16,20 +16,17 @@ import { StarIcon } from "lucide-react";
 interface FeedbackComponentProps {
   isOpen: boolean;
   onClose: () => void;
-  userMessage: string;
   aiResponse: string;
   modelType: string;
   assistantType: string;
+  userMessage: string;
   onFeedbackSubmit: (rating: number, comments: string) => Promise<void>;
 }
+
 
 export function FeedbackComponent({
   isOpen,
   onClose,
-  userMessage,
-  aiResponse,
-  modelType,
-  assistantType,
   onFeedbackSubmit,
 }: FeedbackComponentProps) {
   const [rating, setRating] = useState<number>(0);
