@@ -18,20 +18,14 @@ public class AiController {
     /**
      * Constructor for AiController
      *
-     * @param qwenAiService    Qwen AI service
-     * @param deepseekAiService Deepseek AI service
      * @param gpt4oAiService   Gpt-4o AI service
      * @param gpt3AiService    Gpt-3.5 AI service
      */
     public AiController(
-            @Qualifier("QwenAiService") AiService qwenAiService,
-            @Qualifier("DeepseekAiService") AiService deepseekAiService,
             @Qualifier("Gpt4oService") AiService gpt4oAiService,
             @Qualifier("Gpt3Service") AiService gpt3AiService
     ) {
         this.aiServices = Map.of(
-                "qwen", qwenAiService,
-                "deepseek", deepseekAiService,
                 "gpt4o", gpt4oAiService,
                 "gpt3.5", gpt3AiService
         );
@@ -63,8 +57,6 @@ public class AiController {
     @GetMapping("/models")
     public Map<String, String> getModels() {
         return Map.of(
-                "qwen", "Qwen2.5 model 3b",
-                "deepseek", "Deepseekr1-7b model",
                 "gpt4o", "Gpt-4o model",
                 "gpt3.5", "Gpt-3.5 model"
         );

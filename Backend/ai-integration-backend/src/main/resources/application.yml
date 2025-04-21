@@ -39,15 +39,7 @@ spring:
 
 
 
-  # Deepseek Configuration
   ai:
-    ollama:
-      init:
-        pull-model-strategy: always
-        chat:
-          additional-models:
-            - deepseek-r1:7b
-            - qwen2.5:3b
     openai:
       api-key: ${OPENAI_API_KEY}
       organization-id: ${OPENAI_ORG_ID}

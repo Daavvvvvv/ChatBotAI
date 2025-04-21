@@ -9,13 +9,8 @@ services:
       - .env
     volumes:
       - backend-data:/app/data
-    depends_on:
-      ollama:
-        condition: service_healthy
     networks:
       - app-network
-    environment:
-      - OLLAMA_HOST=ollama:11434
 
   frontend:
     build:
@@ -29,25 +24,6 @@ services:
       - app-network
     depends_on:
       - backend
-
-  ollama:
-    build:
-      context: ./ollama
-    container_name: ollama
-    ports:
-      - "11434:11434"
-    volumes:
-      - ollama-data:/root/.ollama
-    environment:
-      - OLLAMA_HOST=0.0.0.0
-    networks:
-      - app-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:11434"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
 
 volumes:
   backend-data:

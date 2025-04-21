@@ -31,7 +31,6 @@ import { aiApi, type MessageRequest } from "@/lib/api";
 import { FeedbackComponent } from "./FeedbackComponent";
 import { feedbackApi, type FeedbackRequest } from "@/lib/feedbackApi";
 
-
 // Message type definition for the chat
 interface Message {
   role: "user" | "assistant" | "error";
@@ -40,9 +39,9 @@ interface Message {
 }
 
 /**
- * 
+ *
  * @returns ChatComponent - A chat component that allows users to interact with an AI assistant.
- * It includes a message input area, a model selection dropdown, and a feedback system for AI responses. 
+ * It includes a message input area, a model selection dropdown, and a feedback system for AI responses.
  */
 
 export default function ChatComponent() {
@@ -50,7 +49,7 @@ export default function ChatComponent() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [models, setModels] = useState<Record<string, string>>({});
-  const [selectedModel, setSelectedModel] = useState<string>("deepseek");
+  const [selectedModel, setSelectedModel] = useState<string>("gpt3.5");
   const [assistantType, setAssistantType] = useState<string>("software");
   const [requestInProgress, setRequestInProgress] = useState<boolean>(false);
 
@@ -133,9 +132,8 @@ export default function ChatComponent() {
     }
   };
 
-
   /**
-   * 
+   *
    * @param index - The index of the assistant message to rate.
    * Sets the feedback message index and shows the feedback dialog.
    */
@@ -144,9 +142,8 @@ export default function ChatComponent() {
     setShowFeedback(true);
   };
 
-
   /**
-   * 
+   *
    * @param rating - The rating given by the user.
    * @param comments - Additional comments provided by the user.
    * Submits the feedback for the selected assistant message.
@@ -180,7 +177,6 @@ export default function ChatComponent() {
     setFeedbackMessageIndex(null);
   };
 
-
   // Assistant types for the dropdown
   const assistantTypes = [
     { value: "software", label: "Software Engineer" },
@@ -190,7 +186,6 @@ export default function ChatComponent() {
     { value: "travel", label: "Travel" },
   ];
 
-  
   return (
     <div className="w-full max-w-4xl mx-auto p-4">
       <Card className="w-full">
