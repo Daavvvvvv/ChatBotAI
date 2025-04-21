@@ -39,8 +39,8 @@ public class FeedbackService {
         return feedbackRepository.findById(id);
     }
 
-    public List<Feedback> getFeedbackByModelType(String userId) {
-        return feedbackRepository.findByModelType(userId);
+    public List<Feedback> getFeedbackByModelType(String modelType) {
+        return feedbackRepository.findByModelType(modelType);
     }
 
     public List<Feedback> getFeedbackByAssistantType(String assistantType) {
