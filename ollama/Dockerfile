@@ -8,7 +8,7 @@ WORKDIR /scripts
 
 # Add initialization script
 COPY init-ollama.sh .
-RUN chmod +x init-ollama.sh
+RUN sed -i 's/\r$//' init-ollama.sh && chmod +x init-ollama.sh
 
 # Set entrypoint to our script
 ENTRYPOINT ["/scripts/init-ollama.sh"]

@@ -46,8 +46,8 @@ public class AiController {
 
     @PostMapping("/generate")
     public MessageResponse generateResponse(@RequestBody MessageRequest request) {
-        String modelType = request.getModelType() != null ? request.getModelType().toLowerCase() : "qwen";
-        String assistantType = request.getAssistantType() != null ? request.getAssistantType().toLowerCase() : "math";
+        String modelType = request.getModelType();
+        String assistantType = request.getAssistantType();
         AiService service = aiServices.get(modelType);
 
         String response = service.generateResponse(request.getMessage(), assistantType);
