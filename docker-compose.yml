@@ -27,7 +27,6 @@ services:
 
 volumes:
   backend-data:
-  ollama-data:
 
 networks:
   app-network:
